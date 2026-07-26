@@ -92,18 +92,16 @@ Para hospedar o **Sublima Studio AI** no **GitHub Pages**, siga as instruções 
 
 ### 1. Ajustar o `vite.config.ts`
 
-No arquivo `vite.config.ts`, adicione a propriedade `base` com o nome do seu repositório no GitHub:
+O `vite.config.ts` já vem pré-configurado para detectar automaticamente o nome do seu repositório no GitHub Actions (`process.env.GITHUB_REPOSITORY`):
 
 ```typescript
-import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
-import { defineConfig } from 'vite';
-
 export default defineConfig(() => {
+  const repoName = process.env.GITHUB_REPOSITORY
+    ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
+    : './';
+
   return {
-    // IMPORTANTE: Altere NOME-DO-REPOSITORIO para o nome exato do seu repositório no GitHub
-    base: process.env.NODE_ENV === 'production' ? '/NOME-DO-REPOSITORIO/' : '/',
+    base: repoName,
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
@@ -113,6 +111,7 @@ export default defineConfig(() => {
   };
 });
 ```
+*Isso garante que todos os arquivos `.js` e `.css` sejam servidos a partir de `https://seu-usuario.github.io/Sublima-Studio-AI/` sem dar erro 404/MIME.*
 
 ---
 
