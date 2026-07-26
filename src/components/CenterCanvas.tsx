@@ -192,7 +192,18 @@ export const CenterCanvas: React.FC<CenterCanvasProps> = ({
           {layers && layers.length > 0 ? (
             layers.map((layer, index) => {
               if (!layer.visible) return null;
-              
+
+              const isSelected = layer.id === selectedLayerId;
+              const layerStyle: React.CSSProperties = {
+                left: `${layer.x}px`,
+                top: `${layer.y}px`,
+                width: `${layer.width || 1080}px`,
+                height: `${layer.height || 1350}px`,
+                transform: `rotate(${layer.rotation || 0}deg)`,
+                opacity: (layer.opacity ?? 100) / 100,
+                mixBlendMode: (layer.blendMode || 'normal') as any,
+              };
+
               if (layer.type === 'image' && layer.content) {
                 return (
                   <img
@@ -200,11 +211,14 @@ export const CenterCanvas: React.FC<CenterCanvasProps> = ({
                     src={layer.content}
                     alt={layer.name}
                     referrerPolicy="no-referrer"
-                    className="absolute inset-0 w-full h-full object-contain pointer-events-none"
-                    style={{
-                      opacity: layer.opacity / 100,
-                      mixBlendMode: layer.blendMode as any,
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectLayer(layer.id);
                     }}
+                    className={`absolute object-contain cursor-pointer transition-all hover:ring-2 hover:ring-cyan-400/50 ${
+                      isSelected ? 'ring-2 ring-cyan-400/80 shadow-cyan-500/20 shadow-lg' : ''
+                    }`}
+                    style={layerStyle}
                   />
                 );
               }
@@ -213,11 +227,14 @@ export const CenterCanvas: React.FC<CenterCanvasProps> = ({
                 return (
                   <div
                     key={layer.id || index}
-                    className="absolute inset-0 pointer-events-none w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain"
-                    style={{
-                      opacity: layer.opacity / 100,
-                      mixBlendMode: layer.blendMode as any,
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectLayer(layer.id);
                     }}
+                    className={`absolute cursor-pointer transition-all hover:ring-2 hover:ring-cyan-400/50 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain ${
+                      isSelected ? 'ring-2 ring-cyan-400/80 shadow-cyan-500/20 shadow-lg' : ''
+                    }`}
+                    style={layerStyle}
                     dangerouslySetInnerHTML={{ __html: layer.content }}
                   />
                 );
@@ -226,7 +243,14 @@ export const CenterCanvas: React.FC<CenterCanvasProps> = ({
               return (
                 <div
                   key={layer.id || index}
-                  className="absolute inset-0 z-1 pointer-events-none flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectLayer(layer.id);
+                  }}
+                  className={`absolute cursor-pointer transition-all hover:ring-2 hover:ring-cyan-400/50 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain ${
+                    isSelected ? 'ring-2 ring-cyan-400/80 shadow-cyan-500/20 shadow-lg' : ''
+                  }`}
+                  style={layerStyle}
                   dangerouslySetInnerHTML={{ __html: layer.content || TOUCAN_ARTWORK_SVG }}
                 />
               );
