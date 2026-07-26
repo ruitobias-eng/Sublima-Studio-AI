@@ -133,38 +133,105 @@ export default function App() {
     setLayers(layers.map((l) => (l.id === id ? { ...l, ...transform } : l)));
   };
 
+  const [aiVariations, setAiVariations] = useState<any[]>([]);
+
+  // Compute current artwork SVG for 3D viewport preview
+  const topVisibleLayer = layers.find((l) => l.visible);
+  let currentArtworkSvg = TOUCAN_ARTWORK_SVG;
+  if (topVisibleLayer && topVisibleLayer.content) {
+    if (topVisibleLayer.content.trim().startsWith('<svg')) {
+      currentArtworkSvg = topVisibleLayer.content;
+    } else {
+      currentArtworkSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" width="100%" height="100%"><rect width="1080" height="1350" fill="#0f172a"/><image href="${topVisibleLayer.content}" width="1080" height="1350" preserveAspectRatio="xMidYMid slice"/></svg>`;
+    }
+  }
+
   // AI Features Handlers
   const handleGenerateArtAI = async (
     prompt: string,
     style: string,
-    colors: string[]
+    colors: string[],
+    model: string
   ) => {
     setIsGeneratingAI(true);
     showToast('Sintetizando arte generativa com IA Sublima Studio...');
 
     try {
-      const res = await fetch('/api/ai/generate', {
+      const res = await fetch('/api/ai/generate-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt,
           style,
           palette: colors,
-          modelName: 'Sublima AI Pro',
+          model,
         }),
       });
 
       const data = await res.json();
       if (data.success) {
-        showToast(`Arte "${data.result?.title || 'Generativa'}" sintetizada com sucesso!`);
+        if (data.variations && data.variations.length > 0) {
+          setAiVariations(data.variations);
+        }
+
+        const isVector = data.type === 'vector';
+        const newLayer: CanvasLayer = {
+          id: `ai-layer-${Date.now()}`,
+          name: `Arte IA: ${prompt.slice(0, 18)}`,
+          type: isVector ? 'vector' : 'image',
+          visible: true,
+          locked: false,
+          opacity: 100,
+          blendMode: 'normal',
+          x: 0,
+          y: 0,
+          width: 1080,
+          height: 1350,
+          rotation: 0,
+          color: colors[0] || '#38bdf8',
+          content: data.content || data.svg || data.imageUrl,
+        };
+
+        setLayers([newLayer, ...layers]);
+        setSelectedLayerId(newLayer.id);
+
+        const modelLabel = data.modelUsed || 'Modelo IA';
+        showToast(`Arte gerada com sucesso! (${modelLabel})`);
       } else {
-        showToast('Arte gerada no canvas com sucesso!');
+        showToast('Erro ao gerar arte com IA');
       }
-    } catch (e) {
-      showToast('Arte gerada no canvas com sucesso!');
+    } catch (e: any) {
+      showToast('Falha na conexão com o servidor de IA');
     } finally {
       setIsGeneratingAI(false);
     }
+  };
+
+  const handleApplyVariation = (variation: any) => {
+    if (!variation) return;
+    const isVector = variation.type === 'vector' || !!variation.svg;
+    const content = variation.svg || variation.imageUrl || variation.content;
+
+    const newLayer: CanvasLayer = {
+      id: `ai-var-${Date.now()}`,
+      name: `Variação: ${variation.title || 'IA'}`,
+      type: isVector ? 'vector' : 'image',
+      visible: true,
+      locked: false,
+      opacity: 100,
+      blendMode: 'normal',
+      x: 0,
+      y: 0,
+      width: 1080,
+      height: 1350,
+      rotation: 0,
+      color: '#38bdf8',
+      content,
+    };
+
+    setLayers([newLayer, ...layers]);
+    setSelectedLayerId(newLayer.id);
+    showToast(`Variação "${variation.title || 'IA'}" aplicada no canvas!`);
   };
 
   const handleRemoveBackgroundAI = async () => {
@@ -241,8 +308,9 @@ export default function App() {
           isOpen={isAIPanelOpen}
           onClose={() => setIsAIPanelOpen(false)}
           onGenerateArt={handleGenerateArtAI}
-          onApplyVariation={(varId) => showToast(`Variação ${varId} aplicada no canvas!`)}
+          onApplyVariation={handleApplyVariation}
           isGenerating={isGeneratingAI}
+          variations={aiVariations}
         />
 
         {/* Central 2D Vector/Raster Design Canvas */}
@@ -264,7 +332,7 @@ export default function App() {
         <Viewport3D
           selectedProduct={selectedProduct}
           onSelectProduct={setSelectedProduct}
-          artworkSvg={TOUCAN_ARTWORK_SVG}
+          artworkSvg={currentArtworkSvg}
           theme={theme}
         />
 

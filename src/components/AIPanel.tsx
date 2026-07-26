@@ -15,11 +15,12 @@ import {
 import { AI_STYLE_PRESETS, PALETTE_COLORS } from '../data/initialData';
 
 interface AIPanelProps {
-  onGenerateArt: (prompt: string, style: string, colors: string[]) => void;
-  onApplyVariation: (varId: string) => void;
+  onGenerateArt: (prompt: string, style: string, colors: string[], model: string) => void;
+  onApplyVariation: (variation: any) => void;
   isGenerating: boolean;
   isOpen: boolean;
   onClose: () => void;
+  variations: any[];
 }
 
 export const AIPanel: React.FC<AIPanelProps> = ({
@@ -28,11 +29,12 @@ export const AIPanel: React.FC<AIPanelProps> = ({
   isGenerating,
   isOpen,
   onClose,
+  variations = [],
 }) => {
   const [prompt, setPrompt] = useState(
     'Arte tropical vibrante com folhagens, tucano e flores, estilo pintura digital'
   );
-  const [selectedModel, setSelectedModel] = useState('Sublima AI Pro');
+  const [selectedModel, setSelectedModel] = useState('github-models-ai');
   const [selectedStyle, setSelectedStyle] = useState('Vibrante');
   const [selectedColors, setSelectedColors] = useState<string[]>([
     '#facc15',
@@ -45,27 +47,30 @@ export const AIPanel: React.FC<AIPanelProps> = ({
   ]);
   const [isEnhancing, setIsEnhancing] = useState(false);
 
-  // Generated Variations
-  const [variations, setVariations] = useState([
+  // Default fallback variations if none generated yet
+  const displayVariations = variations.length > 0 ? variations : [
     {
       id: 'var-1',
-      title: 'Tucano Tropical Vibrante V1',
-      desc: 'Cores Saturadas CMYK + Iluminação Neon',
+      title: 'Tucano Tropical V1',
+      desc: 'Cores CMYK + Neon',
+      type: 'vector',
       svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%"><rect width="120" height="120" fill="#0f2027"/><circle cx="60" cy="60" r="40" fill="#f9d423"/><path d="M 40 40 L 80 80" stroke="#ff4e50" stroke-width="8" stroke-linecap="round"/></svg>`,
     },
     {
       id: 'var-2',
-      title: 'Aquarela Folhagem Intensa V2',
-      desc: 'Traços Orgânicos + Splatters de Tinta',
+      title: 'Aquarela Folhagem V2',
+      desc: 'Traços Orgânicos',
+      type: 'vector',
       svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%"><rect width="120" height="120" fill="#11998e"/><circle cx="60" cy="60" r="30" fill="#38ef7d"/><path d="M 20 60 Q 60 20 100 60 Z" fill="#22c1c3"/></svg>`,
     },
     {
       id: 'var-3',
       title: 'Vetor Sublimação Pro V3',
-      desc: 'Linhas Limpas + Fundo Gradiente HD',
+      desc: 'Fundo Gradiente',
+      type: 'vector',
       svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%"><rect width="120" height="120" fill="#1e1b4b"/><circle cx="60" cy="60" r="35" fill="#a855f7"/><path d="M 30 30 L 90 90" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/></svg>`,
     },
-  ]);
+  ];
 
   const handleColorToggle = (color: string) => {
     if (selectedColors.includes(color)) {
@@ -95,7 +100,7 @@ export const AIPanel: React.FC<AIPanelProps> = ({
   };
 
   const handleGenerate = () => {
-    onGenerateArt(prompt, selectedStyle, selectedColors);
+    onGenerateArt(prompt, selectedStyle, selectedColors, selectedModel);
   };
 
   if (!isOpen) return null;
@@ -109,7 +114,7 @@ export const AIPanel: React.FC<AIPanelProps> = ({
             <Sparkles className="w-4 h-4" />
           </div>
           <span className="font-bold text-xs uppercase tracking-wider bg-gradient-to-r from-purple-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent">
-            IA GENERATIVA
+            IA GENERATIVA & MODELOS
           </span>
         </div>
         <button
@@ -125,7 +130,7 @@ export const AIPanel: React.FC<AIPanelProps> = ({
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <label className="text-[11px] font-semibold text-slate-300">
-              Descrever o que deseja
+              Descrever a Arte Desejada
             </label>
             <button
               onClick={handleEnhancePrompt}
@@ -156,21 +161,35 @@ export const AIPanel: React.FC<AIPanelProps> = ({
 
         {/* AI Model Selector */}
         <div className="space-y-1.5">
-          <label className="text-[11px] font-semibold text-slate-300">
-            Modelo de IA
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-[11px] font-semibold text-slate-300">
+              Modelo de IA & Geração
+            </label>
+            <span className="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-700/60 font-semibold">
+              Modelos Gratuitos Disponíveis
+            </span>
+          </div>
           <div className="relative">
             <select
               value={selectedModel}
               onChange={(e) => setSelectedModel(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700/80 rounded-lg p-2 text-xs text-slate-200 appearance-none focus:border-cyan-500 outline-none cursor-pointer pr-8"
+              className="w-full bg-slate-900 border border-slate-700/80 rounded-lg p-2 text-xs text-slate-100 appearance-none focus:border-cyan-500 outline-none cursor-pointer pr-8 font-medium"
             >
-              <option value="Sublima AI Pro">Sublima AI Pro (Estamparia 300DPI)</option>
-              <option value="Sublima Flash Vector">Sublima Flash Vector (Vetor Limpo)</option>
-              <option value="Sublima Ultra-HD">Sublima Ultra-HD 4K (Fotorrealista)</option>
+              <option value="github-models-ai">🐙 GitHub Models API (Padrão)</option>
+              <option value="gemini-svg-free">✨ Gemini 3.6 Flash (Vetor SVG - GRATUITO)</option>
+              <option value="pollinations-flux-free">⚡ Pollinations AI Flux (Raster HD - GRATUITO)</option>
+              <option value="gemini-3.1-flash-lite-image">🤖 Google Gemini 3.1 Flash Lite Image</option>
+              <option value="sublima-pattern-free">🎨 Sublima Pattern AI (Estampa Contínua - GRATUITO)</option>
             </select>
             <ChevronDown className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none" />
           </div>
+          <p className="text-[10px] text-slate-400 leading-tight">
+            {selectedModel === 'gemini-svg-free' && '• Gera ilustrações vetoriais SVG nítidas sem perda de qualidade, perfeitas para impressão.'}
+            {selectedModel === 'pollinations-flux-free' && '• Gera imagens raster fotorrealistas em 1024x1024 via motor Flux sem limites de cota.'}
+            {selectedModel === 'github-models-ai' && '• Usa o token de acesso pessoal do GitHub para gerar vetores SVG via GitHub Models API.'}
+            {selectedModel === 'gemini-3.1-flash-lite-image' && '• Modelo oficial da Google GenAI para criação de arte e imagens digitais.'}
+            {selectedModel === 'sublima-pattern-free' && '• Gera padrões contínuos para envelopamento total de canecas, almofadas e camisetas.'}
+          </p>
         </div>
 
         {/* Style Badges Grid */}
@@ -248,12 +267,12 @@ export const AIPanel: React.FC<AIPanelProps> = ({
           {isGenerating ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin text-cyan-300" />
-              <span>Sintetizando Arte Generativa...</span>
+              <span>Sintetizando Arte no Canvas...</span>
             </>
           ) : (
             <>
               <Sparkles className="w-4 h-4 text-cyan-300" />
-              <span>Gerar Arte com IA</span>
+              <span>Gerar Arte com IA e Adicionar ao Canvas</span>
             </>
           )}
         </button>
@@ -262,28 +281,38 @@ export const AIPanel: React.FC<AIPanelProps> = ({
         <div className="pt-2 border-t border-slate-800 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-300">
-              Variações Geradas
+              Variações Geradas (Clique para Aplicar)
             </span>
-            <button className="text-[10px] text-cyan-400 hover:underline">
-              Ver tudo
-            </button>
+            <span className="text-[10px] text-cyan-400 font-mono">
+              {displayVariations.length} Opções
+            </span>
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            {variations.map((v) => (
+            {displayVariations.map((v) => (
               <div
                 key={v.id}
-                onClick={() => onApplyVariation(v.id)}
-                className="group relative aspect-square bg-slate-900 rounded-lg border border-slate-800 overflow-hidden cursor-pointer hover:border-cyan-400/80 transition"
+                onClick={() => onApplyVariation(v)}
+                className="group relative aspect-square bg-slate-900 rounded-lg border border-slate-800 overflow-hidden cursor-pointer hover:border-cyan-400 transition"
               >
-                <div
-                  className="w-full h-full flex items-center justify-center p-1"
-                  dangerouslySetInnerHTML={{ __html: v.svg }}
-                />
-                <div className="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-1 p-1 text-center">
-                  <span className="text-[9px] font-medium text-cyan-300 leading-tight">
-                    Aplicar
+                {v.imageUrl || v.type === 'raster' ? (
+                  <img
+                    src={v.imageUrl || v.content}
+                    alt={v.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div
+                    className="w-full h-full flex items-center justify-center p-1"
+                    dangerouslySetInnerHTML={{ __html: v.svg || v.content }}
+                  />
+                )}
+                <div className="absolute inset-0 bg-slate-950/75 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center p-1 text-center">
+                  <span className="text-[9px] font-bold text-cyan-300 leading-tight">
+                    {v.title || 'Aplicar'}
                   </span>
+                  <span className="text-[8px] text-slate-300 mt-0.5">Clique para usar</span>
                 </div>
               </div>
             ))}

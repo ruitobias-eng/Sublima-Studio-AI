@@ -188,11 +188,55 @@ export const CenterCanvas: React.FC<CenterCanvasProps> = ({
             }}
           />
 
-          {/* Render Vector Artwork SVG */}
-          <div
-            className="absolute inset-0 z-1"
-            dangerouslySetInnerHTML={{ __html: TOUCAN_ARTWORK_SVG }}
-          />
+          {/* Render Active Layers or Fallback SVG */}
+          {layers && layers.length > 0 ? (
+            layers.map((layer, index) => {
+              if (!layer.visible) return null;
+              
+              if (layer.type === 'image' && layer.content) {
+                return (
+                  <img
+                    key={layer.id || index}
+                    src={layer.content}
+                    alt={layer.name}
+                    referrerPolicy="no-referrer"
+                    className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+                    style={{
+                      opacity: layer.opacity / 100,
+                      mixBlendMode: layer.blendMode as any,
+                    }}
+                  />
+                );
+              }
+
+              if ((layer.type === 'vector' || layer.type === 'pattern') && layer.content) {
+                return (
+                  <div
+                    key={layer.id || index}
+                    className="absolute inset-0 pointer-events-none w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain"
+                    style={{
+                      opacity: layer.opacity / 100,
+                      mixBlendMode: layer.blendMode as any,
+                    }}
+                    dangerouslySetInnerHTML={{ __html: layer.content }}
+                  />
+                );
+              }
+
+              return (
+                <div
+                  key={layer.id || index}
+                  className="absolute inset-0 z-1 pointer-events-none flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain"
+                  dangerouslySetInnerHTML={{ __html: layer.content || TOUCAN_ARTWORK_SVG }}
+                />
+              );
+            })
+          ) : (
+            <div
+              className="absolute inset-0 z-1 pointer-events-none"
+              dangerouslySetInnerHTML={{ __html: TOUCAN_ARTWORK_SVG }}
+            />
+          )}
 
           {/* Bleed & Safe Printable Guides Overlay */}
           {showBleed && (
