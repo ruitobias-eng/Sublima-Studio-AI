@@ -1,0 +1,398 @@
+@import "tailwindcss";
+
+/* ===========================================================
+   🌐 SubliStudio Pro DESIGN SYSTEM v1.0
+   TailwindCSS v4 + Profissional IDE Aesthetics
+   =========================================================== */
+
+@theme inline {
+  --radius: 0.75rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 12px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-panel: var(--panel);
+  --color-panel-foreground: var(--panel-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  
+  --color-ai: var(--ai);
+  --color-ai-foreground: var(--ai-foreground);
+  --color-advanced: var(--advanced);
+  --color-advanced-foreground: var(--advanced-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --width-sidebar-left: 260px;
+  --width-toolbar: 56px;
+  --width-inspector: 300px;
+  --height-statusbar: 28px;
+}
+
+/* ===========================================================
+   🌙 DARK THEME DEFINITIONS
+   =========================================================== */
+:root, [data-theme="dark"], .dark {
+  --grey-950: #0B0F17;
+  --grey-900: #111827;
+  --grey-850: #151B26;
+  --grey-800: #1F2937;
+  --grey-700: #374151;
+  --grey-600: #4B5563;
+  --grey-400: #9CA3AF;
+  --grey-100: #F3F4F6;
+  --grey-50:  #F9FAFB;
+
+  --blue-500: #3B82F6;
+  --cyan-500: #06B6D4;
+  --purple-500: #8B5CF6;
+  --emerald-500: #10B981;
+  --amber-500: #F59E0B;
+  --red-500: #EF4444;
+
+  --background: var(--grey-950);
+  --foreground: var(--grey-50);
+  
+  --panel: var(--grey-900);
+  --panel-foreground: var(--grey-100);
+  --popover: var(--grey-850);
+  --popover-foreground: var(--grey-50);
+  
+  --primary: var(--blue-500);
+  --primary-foreground: #ffffff;
+  
+  --ai: var(--cyan-500);
+  --ai-foreground: #ffffff;
+  
+  --advanced: var(--purple-500);
+  --advanced-foreground: #ffffff;
+
+  --muted: var(--grey-800);
+  --muted-foreground: var(--grey-400);
+  --border: var(--grey-700);
+  --input: var(--grey-800);
+  --ring: var(--primary);
+
+  color-scheme: dark;
+}
+
+/* ===========================================================
+   ☀️ LIGHT THEME DEFINITIONS (Full Clean Light Mode)
+   =========================================================== */
+[data-theme="light"], .light {
+  --grey-950: #F8FAFC;
+  --grey-900: #FFFFFF;
+  --grey-850: #F1F5F9;
+  --grey-800: #E2E8F0;
+  --grey-700: #CBD5E1;
+  --grey-600: #94A3B8;
+  --grey-400: #475569;
+  --grey-100: #1E293B;
+  --grey-50:  #0F172A;
+
+  --blue-500: #2563EB;
+  --cyan-500: #0891B2;
+  --purple-500: #7C3AED;
+  --emerald-500: #059669;
+  --amber-500: #D97706;
+  --red-500: #DC2626;
+
+  --background: var(--grey-950);
+  --foreground: var(--grey-50);
+  
+  --panel: var(--grey-900);
+  --panel-foreground: var(--grey-100);
+  --popover: var(--grey-850);
+  --popover-foreground: var(--grey-50);
+  
+  --primary: var(--blue-500);
+  --primary-foreground: #ffffff;
+  
+  --ai: var(--cyan-500);
+  --ai-foreground: #ffffff;
+  
+  --advanced: var(--purple-500);
+  --advanced-foreground: #ffffff;
+
+  --muted: var(--grey-800);
+  --muted-foreground: var(--grey-400);
+  --border: var(--grey-700);
+  --input: #FFFFFF;
+  --ring: var(--primary);
+
+  color-scheme: light;
+}
+
+/* Global Light Mode Overrides for Tailwind Slate Utility Classes */
+[data-theme="light"] .bg-slate-950,
+.light .bg-slate-950,
+[data-theme="light"] [class*="bg-slate-950"],
+.light [class*="bg-slate-950"] {
+  background-color: #f8fafc !important;
+}
+
+[data-theme="light"] .bg-slate-900,
+.light .bg-slate-900,
+[data-theme="light"] [class*="bg-slate-900"],
+.light [class*="bg-slate-900"] {
+  background-color: #ffffff !important;
+}
+
+[data-theme="light"] .bg-slate-800,
+.light .bg-slate-800,
+[data-theme="light"] [class*="bg-slate-800"],
+.light [class*="bg-slate-800"],
+[data-theme="light"] [class*="bg-slate-850"],
+.light [class*="bg-slate-850"] {
+  background-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] [class*="from-slate-950"],
+.light [class*="from-slate-950"],
+[data-theme="light"] [class*="via-slate-900"],
+.light [class*="via-slate-900"],
+[data-theme="light"] [class*="to-slate-950"],
+.light [class*="to-slate-950"] {
+  background-image: none !important;
+  background-color: #f8fafc !important;
+}
+
+[data-theme="light"] .border-slate-800,
+.light .border-slate-800,
+[data-theme="light"] .border-slate-700,
+.light .border-slate-700,
+[data-theme="light"] [class*="border-slate-800"],
+.light [class*="border-slate-800"],
+[data-theme="light"] [class*="border-slate-700"],
+.light [class*="border-slate-700"] {
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .text-slate-100,
+.light .text-slate-100,
+[data-theme="light"] .text-slate-200,
+.light .text-slate-200,
+[data-theme="light"] .text-white,
+.light .text-white,
+[data-theme="light"] [class*="text-slate-100"],
+.light [class*="text-slate-100"],
+[data-theme="light"] [class*="text-slate-200"],
+.light [class*="text-slate-200"] {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .text-slate-300,
+.light .text-slate-300,
+[data-theme="light"] .text-slate-400,
+.light .text-slate-400,
+[data-theme="light"] [class*="text-slate-300"],
+.light [class*="text-slate-300"],
+[data-theme="light"] [class*="text-slate-400"],
+.light [class*="text-slate-400"] {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .text-slate-500,
+.light .text-slate-500,
+[data-theme="light"] [class*="text-slate-500"],
+.light [class*="text-slate-500"] {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .hover\:bg-slate-800:hover,
+.light .hover\:bg-slate-800:hover,
+[data-theme="light"] .hover\:bg-slate-900:hover,
+.light .hover\:bg-slate-900:hover,
+[data-theme="light"] [class*="hover:bg-slate-800"]:hover,
+.light [class*="hover:bg-slate-800"]:hover,
+[data-theme="light"] [class*="hover:bg-slate-900"]:hover,
+.light [class*="hover:bg-slate-900"]:hover {
+  background-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] input,
+.light input,
+[data-theme="light"] select,
+.light select,
+[data-theme="light"] textarea,
+.light textarea {
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* ===========================================================
+   🧱 BASE & TIPOGRAFIA
+   =========================================================== */
+@layer base {
+  * { 
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-semibold tracking-tight text-foreground/90;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1 { @apply text-2xl; }
+  h2 { @apply text-lg; }
+  h3 { @apply text-base; }
+  h4 { @apply text-sm; }
+
+  p, span, li, label { 
+    @apply text-muted-foreground;
+  }
+  
+  a { 
+    @apply text-primary transition-colors duration-200; 
+  }
+  
+  a:hover { 
+    @apply text-primary/80; 
+  }
+  
+  ::selection { 
+    @apply bg-primary/20 text-foreground; 
+  }
+
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+}
+
+/* ===========================================================
+   ✨ COMPONENTES ESTRUTURAIS DE IDE
+   =========================================================== */
+@layer components {
+  .ide-layout {
+    @apply grid h-screen w-screen overflow-hidden;
+    grid-template-rows: auto 1fr var(--height-statusbar);
+    grid-template-columns: var(--width-toolbar) var(--width-sidebar-left) 1fr var(--width-inspector);
+    grid-template-areas: 
+      "header header header header"
+      "toolbar sidebar canvas inspector"
+      "statusbar statusbar statusbar statusbar";
+  }
+
+  .ide-panel {
+    @apply bg-panel border-border overflow-hidden flex flex-col;
+  }
+
+  .ide-sidebar { @apply bg-panel border-border overflow-hidden flex flex-col border-r; grid-area: sidebar; }
+  .ide-toolbar { @apply bg-panel border-border overflow-hidden flex flex-col border-r; grid-area: toolbar; }
+  .ide-canvas { @apply bg-background/50 relative overflow-hidden; grid-area: canvas; }
+  .ide-inspector { @apply bg-panel border-border overflow-hidden flex flex-col border-l; grid-area: inspector; }
+  .ide-statusbar { @apply bg-panel border-border overflow-hidden flex flex-row items-center justify-between text-xs px-3 border-t; grid-area: statusbar; }
+
+  .glass-ui { 
+    @apply backdrop-blur-xl bg-panel/70 border border-border/30; 
+  }
+
+  .panel-floating {
+    @apply backdrop-blur-xl bg-panel/70 border border-border/30 rounded-xl shadow-2xl;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .tool-button {
+    @apply p-2 rounded-md transition-colors duration-150 flex items-center justify-center text-muted-foreground;
+  }
+  .tool-button:hover { @apply bg-muted/50 text-foreground; }
+  .tool-button.active { @apply bg-primary/20 text-primary; }
+  
+  .tool-button-ai {
+    @apply p-2 rounded-md transition-colors duration-150 flex items-center justify-center text-muted-foreground;
+  }
+  .tool-button-ai:hover { @apply bg-ai/20 text-ai; }
+  .tool-button-ai.active { @apply bg-ai/30 text-ai; }
+
+  .ide-input {
+    @apply h-7 bg-input border border-border rounded-sm px-2 text-xs text-foreground placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-primary focus:border-primary transition;
+  }
+
+  .bg-grid-sublimation { 
+    background-image: 
+      linear-gradient(var(--grey-800) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grey-800) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: center center;
+    opacity: 0.5;
+  }
+}
+
+/* ===========================================================
+   🎬 UTILITÁRIOS E FEEDBACK
+   =========================================================== */
+@layer utilities {
+  .text-ai { color: var(--ai); }
+  .text-advanced { color: var(--advanced); }
+  .text-success { color: var(--emerald-500); }
+  .text-warning { color: var(--amber-500); }
+  .text-danger { color: var(--red-500); }
+
+  .gradient-ai {
+    background: linear-gradient(135deg, var(--cyan-500) 0%, var(--purple-500) 100%);
+  }
+  .gradient-ai-text {
+    background: linear-gradient(135deg, var(--cyan-500) 0%, var(--purple-500) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-panel;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded-full;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { 
+    transition-duration: 0.01ms !important; 
+    animation-duration: 0.01ms !important; 
+    animation-iteration-count: 1 !important;
+  }
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  @apply outline-none ring-2 ring-ring ring-offset-1 ring-offset-background;
+}
+
+canvas[data-engine^="three.js"] {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  outline: none !important;
+}

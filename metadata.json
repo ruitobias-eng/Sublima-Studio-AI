@@ -1,0 +1,6 @@
+{
+  "name": "Sublima Studio AI",
+  "description": "Next-Generation Professional Sublimation Artwork Creation IDE with AI, 3D Product Viewport, Vector/Raster Editing, and Production Print Controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
